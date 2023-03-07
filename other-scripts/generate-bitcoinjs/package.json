@@ -1,0 +1,12 @@
+{
+  "name": "generate-bitcoinjs",
+  "type": "module",
+  "scripts": {
+    "compile": "browserify -r ./index.js:bitcoin -s bitcoin -o ../../js/bitcoinjs-lib.js"
+  },
+  "dependencies": {
+    "bitcoinjs-lib": "^6.1.0",
+    "browserify": "^17.0.0",
+    "coininfo": "^5.2.1"
+  }
+}
