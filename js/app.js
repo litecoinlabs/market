@@ -1,11 +1,6 @@
-const isProduction = !location.href.includes("signet");
-const ordinalsExplorerUrl = isProduction
-  ? "https://ordinals.com"
-  : "https://explorer-signet.openordex.org";
-const baseMempoolUrl = isProduction
-  ? "https://mempool.space"
-  : "https://mempool.space/signet";
-const networkName = isProduction ? "mainnet" : "signet";
+const ordinalsExplorerUrl = "https://ordinals.com";
+const baseMempoolUrl = "https://mempool.space";
+const networkName = "mainnet";
 const baseMempoolApiUrl = `${baseMempoolUrl}/api`;
 const bitcoinPriceApiUrl = "https://blockchain.info/ticker?cors=true";
 const nostrRelayUrl = "wss://nostr.openordex.org";
@@ -745,7 +740,7 @@ async function main() {
 
 async function inscriptionPage() {
   await modulesInitializedPromise;
-  network = isProduction ? bitcoin.networks.bitcoin : bitcoin.networks.testnet;
+  network = bitcoin.networks.bitcoin;
 
   let inscriptionID;
 
@@ -1546,7 +1541,3 @@ const hoursMin =
   ":" +
   currDate.getMinutes().toString().padStart(2, "0");
 document.getElementById("time").textContent = hoursMin;
-
-if (!isProduction) {
-  document.getElementById("networkName").textContent = "(Signet)";
-}
