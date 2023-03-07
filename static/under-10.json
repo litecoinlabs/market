@@ -1,0 +1,72 @@
+{
+  "name": "<10",
+  "inscription_icon": "8611ba0b661b22d3bd53b44b607bc2255c66631c71eac97b47dd279a5c06a107i0",
+  "supply": "10",
+  "slug": "under-10",
+  "description": "The first 10 inscriptions",
+  "twitter_link": "",
+  "discord_link": "",
+  "website_link": "",
+  "inscriptions": [
+    {
+      "id": "71e0f6dc87a473aa69787fff8e09e5eddfdca96e587928a5b1a25c0ae16dc0eei0",
+      "meta": {
+        "name": "Inscription #0"
+      }
+    },
+    {
+      "id": "ce21d8685610b290d708b8ec3c006892294e3adfa0ab49a32605cb54f37cc001i0",
+      "meta": {
+        "name": "Inscription #1"
+      }
+    },
+    {
+      "id": "d1effe076165cd6940cc6e1a92822c5b6cc36fe22fad8668feefbb25ab4f4032i0",
+      "meta": {
+        "name": "Inscription #2"
+      }
+    },
+    {
+      "id": "309ca94df5683e4daaaac8b97339d7ad92801230eda6d9ba94771ba5b6c33bb6i0",
+      "meta": {
+        "name": "Inscription #3"
+      }
+    },
+    {
+      "id": "02177b71361f758417db44985ce8753dbfecd42d17ff7701c32af7e5b9fc1651i0",
+      "meta": {
+        "name": "Inscription #4"
+      }
+    },
+    {
+      "id": "01b707815b4643d3d9798b2a537874797e1ad767a841899214610faa6286cc4ai0",
+      "meta": {
+        "name": "Inscription #5"
+      }
+    },
+    {
+      "id": "b9a5106286aaefe7b8920112c5ae60d626d4dc169ed1b9a980bcd7712a8757aei0",
+      "meta": {
+        "name": "Inscription #6"
+      }
+    },
+    {
+      "id": "54c9c28b78bc5f7080608ec569b29e574026a6b88b00f1eb7ccf35468e9a8f4di0",
+      "meta": {
+        "name": "Inscription #7"
+      }
+    },
+    {
+      "id": "8d85fc85735c61504dfd4e62cafea279e3fbcc7f1a18d3f814e3746c23676375i0",
+      "meta": {
+        "name": "Inscription #8"
+      }
+    },
+    {
+      "id": "8611ba0b661b22d3bd53b44b607bc2255c66631c71eac97b47dd279a5c06a107i0",
+      "meta": {
+        "name": "Inscription #9"
+      }
+    }
+  ]
+}
