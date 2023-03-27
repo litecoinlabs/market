@@ -1,34 +1,23 @@
 const coin = "LTC";
-const ordinalsExplorerUrl = "https://ordinals.com";
-const baseMempoolUrl = "https://mempool.space";
+const ordinalsExplorerUrl = "https://liteordinals-explorer.scaur.nz"; // TODO: Replace with LitecoinLabs explorer
+const baseMempoolUrl = "https://litepool.space";
 const networkName = "mainnet";
 const baseMempoolApiUrl = `${baseMempoolUrl}/api`;
-const bitcoinPriceApiUrl = "https://blockchain.info/ticker?cors=true";
-const nostrRelayUrl = "wss://nostr.openordex.org";
-const collectionsRepo = "ordinals-wallet/ordinals-collections";
-const exchangeName = "openordex";
+const litecoinPriceApiUrl =
+  "https://api.coingecko.com/api/v3/simple/price?ids=litecoin&vs_currencies=usd";
+const nostrRelayUrl = "wss://nostr.scaur.nz"; // TODO: Remove Nostr, replace with centralized DB for performance
+const collectionsRepo = "litecoinlabs/collections";
+const exchangeName = "ordinalslite.market"; // TODO: See if the dot causes any issues
 const feeLevel = "hourFee"; // "fastestFee" || "halfHourFee" || "hourFee" || "economyFee" || "minimumFee"
-const dummyUtxoValue = 1_000;
+const dummyUtxoValue = 100_000; // Based off https://litecoin.info/index.php/Transaction_fees
 const nostrOrderEventKind = 802;
 const txHexByIdCache = {};
 const urlParams = new URLSearchParams(window.location.search);
 const numberOfDummyUtxosToCreate = 1;
 const wallets = [
   {
-    name: "Unisat",
-    url: "https://unisat.io/download",
-  },
-  {
-    name: "Hiro",
-    url: "https://wallet.hiro.so/wallet/install-web",
-  },
-  {
-    name: "Sparrow",
-    url: "https://sparrowwallet.com/download/",
-  },
-  {
-    name: "OrdinalSafe",
-    url: "https://ordinalsafe.xyz",
+    name: "Litescribe Wallet",
+    url: "https://github.com/ynohtna92/extension-ltc/releases",
   },
 ].sort((a, b) => 0.5 - Math.random());
 const walletsListHtml = wallets
@@ -109,10 +98,11 @@ function base64ToHex(str) {
 }
 
 function getInstalledWalletName() {
-  if (typeof window.unisat !== "undefined") {
-    return "Unisat";
+  if (typeof window.litescribe !== "undefined") {
+    return "Litescribe Wallet";
   }
 
+  /* TODO: Implement LTC forks of Hiro, Xverse, OrdinalSafe
   if (window?.StacksProvider?.psbtRequest) {
     return "Hiro";
   }
@@ -123,7 +113,7 @@ function getInstalledWalletName() {
 
   if (typeof window.ordinalSafe !== "undefined") {
     return "OrdinalSafe";
-  }
+  } */
 }
 
 async function getHiroWalletAddresses() {
@@ -168,17 +158,18 @@ async function getHiroWalletAddresses() {
  * @returns {string | undefined}
  */
 async function getWalletAddress(type = "cardinal") {
-  if (typeof window.unisat !== "undefined") {
-    return (await unisat.requestAccounts())?.[0];
+  if (typeof window.litescribe !== "undefined") {
+    return (await litescribe.requestAccounts())?.[0];
   }
 
+  /* TODO: Implement LTC forks of Hiro, Xverse, OrdinalSafe
   if (typeof window.StacksProvider !== "undefined") {
     return (await getHiroWalletAddresses())?.[type];
   }
 
   if (typeof window.ordinalSafe !== "undefined") {
     return (await ordinalSafe.requestAccounts())?.[0];
-  }
+  } */
 }
 
 function removeHashFromUrl() {
@@ -327,7 +318,7 @@ function calculateFee(
     includeChangeOutput * outSize;
   const fee = txSize * recommendedFeeRate;
 
-  return fee;
+  return fee; // TODO: Check this is sufficient for LTC
 }
 
 function getExplorerLink(inscriptionId) {
@@ -377,8 +368,8 @@ async function getInscriptionIdByNumber(inscriptionNumber) {
 }
 
 async function getCollection(collectionSlug) {
-  if (collectionSlug == "under-1k") {
-    return await fetch(`/static/under-1k.json`).then((response) =>
+  if (collectionSlug == "under-10") {
+    return await fetch(`/static/under-10.json`).then((response) =>
       response.json()
     );
   }
@@ -498,8 +489,11 @@ const range = (n) => Array.from(Array(n).keys());
 async function signPSBTUsingWallet(psbtBase64) {
   await getWalletAddress();
 
-  if (installedWalletName == "Unisat") {
-    return await unisat.signPsbt(base64ToHex(psbtBase64));
+  if (installedWalletName == "Litescribe Wallet") {
+    return await litescribe.signPsbt(base64ToHex(psbtBase64));
+  }
+
+  /* TODO: Implement LTC forks of Hiro, Xverse, OrdinalSafe
   } else if (installedWalletName == "Hiro") {
     return new Promise((resolve, reject) => {
       connect.openPsbtRequestPopup({
@@ -523,7 +517,7 @@ async function signPSBTUsingWallet(psbtBase64) {
     });
   } else if (installedWalletName == "OrdinalSafe") {
     return await ordinalSafe.signPsbt(base64ToHex(psbtBase64));
-  }
+  } */
 }
 
 async function signPSBTUsingWalletIntoInput(inputId, signedInputId) {
@@ -679,9 +673,9 @@ function satToBtc(sat) {
 }
 
 async function main() {
-  bitcoinPrice = fetch(bitcoinPriceApiUrl)
+  bitcoinPrice = fetch(litecoinPriceApiUrl)
     .then((response) => response.json())
-    .then((data) => data.USD.last);
+    .then((data) => data?.litecoin?.usd);
 
   if (window.NostrTools) {
     nostrRelay = window.NostrTools.relayInit(nostrRelayUrl);
