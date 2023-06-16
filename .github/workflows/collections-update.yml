@@ -3,7 +3,7 @@ name: Create PR to update collections
 on:
   schedule:
     # run once a day, 6am
-    - cron:  '0 6 * * *'
+    - cron: "0 6 * * *"
 
 jobs:
   update-collection:
