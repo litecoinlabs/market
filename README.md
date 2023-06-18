@@ -1,6 +1,6 @@
-# LiteOrdex - Litecoin Ordinals Decentralized Exchange
+# OrdinalsLite.Market - Litecoin Ordinals Decentralized Exchange
 
-LiteOrdex is an open source zero-fee trustless Litecoin NFT marketplace based on partially signed litecoin transactions
+OrdinalsLite.Market is an open source zero-fee trustless Litecoin NFT marketplace based on partially signed litecoin transactions
 
 ## How it works
 
