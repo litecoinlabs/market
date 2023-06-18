@@ -2,6 +2,7 @@
 cd ~/litecoinlabs/market
 git fetch
 if [ $(git rev-parse HEAD) != $(git rev-parse @{u}) ]; then
+  git reset --hard
   git pull
   VERSION=$(date +%s)
   for file in *.html; do 
