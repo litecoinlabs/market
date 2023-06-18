@@ -50,6 +50,16 @@
     "twitter_link": "https://twitter.com/ltcmoonbird"
   },
   {
+    "description": "Smallest Pixel Ordinal Collection",
+    "discord_link": "",
+    "inscription_icon": "561c68adf3293507aba28e2b426f1090c86aa310456d5446a2dd6d7b04f04f15i0",
+    "name": "Litecoin Peeps",
+    "slug": "litecoin-peeps",
+    "supply": "9998",
+    "website_link": "https://litecoinpeeps.com",
+    "twitter_link": ""
+  },
+  {
     "name": "Litecoin Punks",
     "inscription_icon": "f2b6adf7b2d0f128fb14817ff37f5f36e9176b17571e20c49871875553f937b4i0",
     "supply": "100",
