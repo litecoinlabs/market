@@ -1,9 +1,9 @@
-name: Create PR to update collections
+name: Collections auto-updater
 
 on:
   schedule:
-    # run once a day, 6am
-    - cron: "0 6 * * *"
+    # run once a day, 4pm GMT
+    - cron: "0 16 * * *"
 
 jobs:
   update-collection:
