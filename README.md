@@ -120,30 +120,15 @@ Now the website should be accessible via HTTP.
 
 #### 5. Setting up auto pull from Github
 
-1. Create a script file: `nano ~/update.sh`
-2. Paste the following script:
+1. Make the update script executable: `chmod +x ~/litecoinlabs/market/update.sh`
+2. Open the crontab file for editing: `crontab -e`
+3. Add a new line to schedule the update script to run every 15 minutes:
 
 ```
-#!/bin/bash
-cd ~/litecoinlabs/market
-git fetch
-if [ $(git rev-parse HEAD) != $(git rev-parse @{u}) ]; then
-  git pull
-  sudo cp -r * /usr/share/nginx/html/
-  sudo service nginx restart
-fi
+*/15 * * * * /home/ec2-user/litecoinlabs/market/update.sh > /dev/null 2>&1
 ```
 
-3. Save and exit (Ctrl+X, Y, Enter).
-4. Make the script executable: `chmod +x ~/update.sh`
-5. Open the crontab file for editing: `crontab -e`
-6. Add a new line to schedule the update script to run every 15 minutes:
-
-```
-*/15 * * * * /home/ec2-user/update.sh > /dev/null 2>&1
-```
-
-7. Save and exit (`:wq`, Enter). The cron job is now scheduled.
+4. Save and exit (`:wq`, Enter). The cron job is now scheduled.
 
 Your website should now automatically pull the latest changes from the Git repository every 15 minutes, and is accessible over HTTPS.
 
