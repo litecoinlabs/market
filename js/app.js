@@ -7,7 +7,7 @@ const litecoinPriceApiUrl =
   "https://api.coingecko.com/api/v3/simple/price?ids=litecoin&vs_currencies=usd";
 const nostrRelayUrl = "wss://nostr.scaur.nz"; // TODO: Remove Nostr, replace with centralized DB for performance
 const collectionsRepo = "litecoinlabs/collections";
-const exchangeName = "ordinalslite.market"; // TODO: See if the dot causes any issues
+const exchangeName = "ordinalslite.market";
 const feeLevel = "hourFee"; // "fastestFee" || "halfHourFee" || "hourFee" || "economyFee" || "minimumFee"
 const dummyUtxoValue = 100_000; // Based off https://litecoin.info/index.php/Transaction_fees
 const nostrOrderEventKind = 802;
@@ -318,7 +318,7 @@ function calculateFee(
     includeChangeOutput * outSize;
   const fee = txSize * recommendedFeeRate;
 
-  return fee; // TODO: Check this is sufficient for LTC
+  return fee;
 }
 
 function getExplorerLink(inscriptionId) {
