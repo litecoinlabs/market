@@ -116,7 +116,7 @@ function getInstalledWalletName() {
   } */
 }
 
-async function getHiroWalletAddresses() {
+/* async function getHiroWalletAddresses() {
   return new Promise((resolve, reject) => {
     if (!connectUserSession.isUserSignedIn()) {
       connect.showConnect({
@@ -150,7 +150,7 @@ async function getHiroWalletAddresses() {
       });
     }
   });
-}
+}*/
 
 /**
  * getWalletAddress(type = 'cardinal')
@@ -538,7 +538,7 @@ async function signPSBTUsingWalletAndBroadcast(inputId) {
   try {
     const signedPsbtHex = await signPSBTUsingWallet(input.value);
     const signedPsbt = bitcoin.Psbt.fromHex(signedPsbtHex);
-    if (installedWalletName == "Hiro") {
+    /*if (installedWalletName == "Hiro") {
       for (let i = 0; i < signedPsbt.data.inputs.length; i++) {
         try {
           signedPsbt.finalizeInput(i);
@@ -546,7 +546,7 @@ async function signPSBTUsingWalletAndBroadcast(inputId) {
           console.error(e);
         }
       }
-    }
+    }*/
 
     const txHex = signedPsbt.extractTransaction().toHex();
     const res = await fetch(`${baseMempoolApiUrl}/tx`, {
@@ -625,13 +625,13 @@ async function generatePSBTListingInscriptionForSale(
 
   const [ordinalUtxoTxId, ordinalUtxoVout] = ordinalOutput.split(":");
   const tx = bitcoin.Transaction.fromHex(await getTxHexById(ordinalUtxoTxId));
-  if (installedWalletName != "Hiro") {
+  /*if (installedWalletName != "Hiro") {
     for (const output in tx.outs) {
       try {
         tx.setWitness(parseInt(output), []);
       } catch {}
     }
-  }
+  }*/
 
   const input = {
     hash: ordinalUtxoTxId,
@@ -642,7 +642,7 @@ async function generatePSBTListingInscriptionForSale(
       bitcoin.Transaction.SIGHASH_SINGLE |
       bitcoin.Transaction.SIGHASH_ANYONECANPAY,
   };
-  if (installedWalletName == "Hiro") {
+  /*if (installedWalletName == "Hiro") {
     await getWalletAddress();
     input.tapInternalKey = toXOnly(
       tx
@@ -652,7 +652,7 @@ async function generatePSBTListingInscriptionForSale(
           "hex"
         )
     );
-  }
+  }*/
 
   psbt.addInput(input);
 
@@ -703,13 +703,13 @@ async function main() {
             (el) => (el.innerHTML = walletsListHtml)
           );
         }
-        if (installedWalletName == "Hiro") {
+        /*if (installedWalletName == "Hiro") {
           connectAppConfig = new connect.AppConfig([
             "store_write",
             "publish_data",
           ]);
           connectUserSession = new connect.UserSession({ connectAppConfig });
-        }
+        }*/
         clearInterval(interval);
         resolve();
       }
@@ -893,7 +893,7 @@ async function inscriptionPage() {
 
       try {
         let testPsbt = bitcoin.Psbt.fromBase64(signedSalePsbt, { network });
-        if (installedWalletName == "Hiro") {
+        /*if (installedWalletName == "Hiro") {
           for (let i = 0; i < testPsbt.data.inputs.length; i++) {
             if (
               testPsbt.data.inputs[i].tapKeySig?.length &&
@@ -911,7 +911,7 @@ async function inscriptionPage() {
             }
           }
           signedSalePsbt = testPsbt.toBase64();
-        }
+        }*/
         testPsbt.extractTransaction(true);
       } catch (e) {
         console.error(e);
@@ -1100,21 +1100,21 @@ async function inscriptionPage() {
         } catch {}
       }
 
-      if (installedWalletName === "OrdinalSafe") {
+      /*if (installedWalletName === "OrdinalSafe") {
         psbt.addInput({
           hash: utxo.txid,
           index: utxo.vout,
           // nonWitnessUtxo: tx.toBuffer(),
           witnessUtxo: tx.outs[utxo.vout],
         });
-      } else {
-        psbt.addInput({
-          hash: utxo.txid,
-          index: utxo.vout,
-          nonWitnessUtxo: tx.toBuffer(),
-          // witnessUtxo: tx.outs[utxo.vout],
-        });
-      }
+      } else {*/
+      psbt.addInput({
+        hash: utxo.txid,
+        index: utxo.vout,
+        nonWitnessUtxo: tx.toBuffer(),
+        // witnessUtxo: tx.outs[utxo.vout],
+      });
+      //}
 
       totalValue += utxo.value;
     }
@@ -1160,21 +1160,21 @@ async function inscriptionPage() {
       } catch {}
     }
 
-    if (installedWalletName === "OrdinalSafe") {
+    /*if (installedWalletName === "OrdinalSafe") {
       psbt.addInput({
         hash: dummyUtxo.txid,
         index: dummyUtxo.vout,
         // nonWitnessUtxo: tx.toBuffer(),
         witnessUtxo: tx.outs[dummyUtxo.vout],
       });
-    } else {
-      psbt.addInput({
-        hash: dummyUtxo.txid,
-        index: dummyUtxo.vout,
-        nonWitnessUtxo: tx.toBuffer(),
-        // witnessUtxo: tx.outs[dummyUtxo.vout],
-      });
-    }
+    } else {*/
+    psbt.addInput({
+      hash: dummyUtxo.txid,
+      index: dummyUtxo.vout,
+      nonWitnessUtxo: tx.toBuffer(),
+      // witnessUtxo: tx.outs[dummyUtxo.vout],
+    });
+    //}
 
     // Add inscription output
     psbt.addOutput({
@@ -1201,21 +1201,21 @@ async function inscriptionPage() {
         } catch {}
       }
 
-      if (installedWalletName === "OrdinalSafe") {
+      /*if (installedWalletName === "OrdinalSafe") {
         psbt.addInput({
           hash: utxo.txid,
           index: utxo.vout,
           // nonWitnessUtxo: tx.toBuffer(),
           witnessUtxo: tx.outs[utxo.vout],
         });
-      } else {
-        psbt.addInput({
-          hash: utxo.txid,
-          index: utxo.vout,
-          nonWitnessUtxo: tx.toBuffer(),
-          // witnessUtxo: tx.outs[utxo.vout],
-        });
-      }
+      } else {*/
+      psbt.addInput({
+        hash: utxo.txid,
+        index: utxo.vout,
+        nonWitnessUtxo: tx.toBuffer(),
+        // witnessUtxo: tx.outs[utxo.vout],
+      });
+      //}
 
       totalValue += utxo.value;
       totalPaymentValue += utxo.value;
