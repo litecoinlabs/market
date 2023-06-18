@@ -1,5 +1,5 @@
 const coin = "LTC";
-const ordinalsExplorerUrl = "https://liteordinals-explorer.scaur.nz"; // TODO: Replace with LitecoinLabs explorer
+const ordinalsExplorerUrl = "https://ordinalslite.com"; // TODO: Replace with LitecoinLabs explorer
 const baseMempoolUrl = "https://litepool.space";
 const networkName = "mainnet";
 const baseMempoolApiUrl = `${baseMempoolUrl}/api`;
