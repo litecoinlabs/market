@@ -4,6 +4,7 @@ on:
   schedule:
     # run once a day, 4pm GMT
     - cron: "0 16 * * *"
+  workflow_dispatch:
 
 jobs:
   update-collection:
