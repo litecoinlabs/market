@@ -16,7 +16,7 @@ const urlParams = new URLSearchParams(window.location.search);
 const numberOfDummyUtxosToCreate = 1;
 const wallets = [
   {
-    name: "Litescribe Wallet",
+    name: "Litescribe",
     url: "https://github.com/ynohtna92/extension-ltc/releases",
   },
 ].sort((a, b) => 0.5 - Math.random());
@@ -99,7 +99,7 @@ function base64ToHex(str) {
 
 function getInstalledWalletName() {
   if (typeof window.litescribe !== "undefined") {
-    return "Litescribe Wallet";
+    return "Litescribe";
   }
 
   /* TODO: Implement LTC forks of Hiro, Xverse, OrdinalSafe
@@ -489,7 +489,7 @@ const range = (n) => Array.from(Array(n).keys());
 async function signPSBTUsingWallet(psbtBase64) {
   await getWalletAddress();
 
-  if (installedWalletName == "Litescribe Wallet") {
+  if (installedWalletName == "Litescribe") {
     return await litescribe.signPsbt(base64ToHex(psbtBase64));
   }
 
