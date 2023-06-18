@@ -182,7 +182,7 @@ function removeHashFromUrl() {
   }
 }
 
-async function getLowestPriceSellPSBGForUtxo(utxo) {
+async function getLowestPriceSellPSBTForUtxo(utxo) {
   await nostrRelay.connect();
   const orders = (
     await nostrRelay.list([
@@ -1314,7 +1314,7 @@ See transaction details on <a href="${baseMempoolUrl}/tx/${txId}" target="_blank
 
   sellerSignedPsbt = getHashQueryStringParam("sellerSignedPsbt");
   if (!sellerSignedPsbt) {
-    sellerSignedPsbt = await getLowestPriceSellPSBGForUtxo(inscription.output);
+    sellerSignedPsbt = await getLowestPriceSellPSBTForUtxo(inscription.output);
   }
   if (sellerSignedPsbt) {
     try {
