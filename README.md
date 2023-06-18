@@ -19,14 +19,20 @@ In order to have your collection listed, create a pull request on the [litecoinl
 
 Build docker image
 
-```
-$ docker build -t openordex .
+```bash
+docker build -t liteordex .
 ```
 
 Run Liteordex with docker
 
+```bash
+docker run -it -d -p 8080:80 liteordex
 ```
-$ docker run -it -d -p 8080:80 openordex
+
+Run Liteordex with hot reloading
+
+```bash
+docker run -it -d -p 8080:80 -v $(pwd):/usr/share/nginx/html liteordex
 ```
 
 <img width="1057" alt="Screen Shot 2023-03-06 at 9 40 15 AM" src="https://user-images.githubusercontent.com/115091323/223142708-3eb0e8d7-08d7-4854-9d3f-32ddda7f975d.png">
@@ -83,6 +89,14 @@ server {
     server_name ordinalslite.market;
 
     location / {
+        root /usr/share/nginx/html;
+    }
+
+    # Note: This is only neccessary for older versions of nginx, e.g. 1.12
+    location ~ \.wasm$ {
+        types {
+            application/wasm wasm;
+        }
         root /usr/share/nginx/html;
     }
 }
