@@ -1,3 +1,18 @@
 .bg-secondary {
   background: linear-gradient(to right, #3574c1, #008081) !important;
 }
+
+.credits-list {
+  padding-left: 1rem;
+  margin-bottom: 1rem;
+}
+
+.credits-list li {
+  padding: 0.5rem 0;
+}
+
+.credits-text-big {
+  font-size: 2rem;
+  display: inline-block;
+  margin: 0 auto;
+}
