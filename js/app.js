@@ -1507,10 +1507,10 @@ async function loadLatestOrders(limit = 8, nostrLimit = 25) {
 async function homePage() {
   loadCollections(12, [
     {
-      name: "<1k",
+      name: "<10",
       inscription_icon:
-        "26482871f33f1051f450f2da9af275794c0b5f1c61ebf35e4467fb42c2813403i0",
-      slug: "under-1k",
+        "8611ba0b661b22d3bd53b44b607bc2255c66631c71eac97b47dd279a5c06a107i0",
+      slug: "under-10",
     },
   ]);
 
