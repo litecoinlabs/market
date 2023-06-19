@@ -1529,10 +1529,3 @@ async function listingsPage() {
 }
 
 window.onload = main();
-
-const currDate = new Date();
-const hoursMin =
-  currDate.getHours().toString().padStart(2, "0") +
-  ":" +
-  currDate.getMinutes().toString().padStart(2, "0");
-document.getElementById("time").textContent = hoursMin;
