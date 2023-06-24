@@ -118,19 +118,19 @@ Now the website should be accessible via HTTP.
 1. Set up DNS for your domain to point to the Public IPv4 address / Elastic IP you got in step 1.
 2. Run Certbot to get a new certificate and automatically configure Nginx: `sudo certbot --nginx`
 
-#### 5. Setting up auto pull from Github
+_Step 5 still needs work..._
 
-1. Make the update script executable: `chmod +x ~/litecoinlabs/market/update.sh`
-2. Open the crontab file for editing: `crontab -e`
-3. Add a new line to schedule the update script to run every 15 minutes:
+~~#### 5. Setting up auto pull from Github~~
 
-```
-*/15 * * * * /home/ec2-user/litecoinlabs/market/update.sh > /dev/null 2>&1
-```
+~~1. Make the update script executable: `chmod +x ~/litecoinlabs/market/update.sh`~~
+~~2. Open the crontab file for editing: `crontab -e`~~
+~~3. Add a new line to schedule the update script to run every 15 minutes:~~
 
-4. Save and exit (`:wq`, Enter). The cron job is now scheduled.
+~~`*/15 * * * * /home/ec2-user/litecoinlabs/market/update.sh > /dev/null 2>&1`~~
 
-Your website should now automatically pull the latest changes from the Git repository every 15 minutes, and is accessible over HTTPS.
+~~4. Save and exit (`:wq`, Enter). The cron job is now scheduled.~~
+
+~~Your website should now automatically pull the latest changes from the Git repository every 15 minutes, and is accessible over HTTPS.~~
 
 #### 6. (Optional) Compile bitcoinjs-lib
 
