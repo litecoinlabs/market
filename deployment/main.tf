@@ -26,9 +26,13 @@ provider "aws" {
 
 resource "aws_s3_bucket" "static_site" {
   bucket = var.bucket_name
-  
-  website {
-    index_document = "index.html"
+}
+
+resource "aws_s3_bucket_website_configuration" "static_site_website" {
+  bucket = aws_s3_bucket.static_site.id
+
+  index_document {
+    suffix = "index.html"
   }
 }
 
@@ -53,7 +57,7 @@ module "static_files" {
   base_dir = "../site/"
 }
 
-resource "aws_s3_bucket_object" "static_files" {
+resource "aws_s3_object" "static_files" {
   bucket = aws_s3_bucket.static_site.id
   acl = "public-read"
   for_each = module.static_files.files
@@ -94,7 +98,7 @@ resource "aws_cloudfront_distribution" "static_site_distribution" {
   }
 
   origin {
-    domain_name = aws_s3_bucket.static_site.website_endpoint
+    domain_name = aws_s3_bucket.static_site.bucket_regional_domain_name
     origin_id   = "S3-${aws_s3_bucket.static_site.id}"
 
     custom_origin_config {
