@@ -24,7 +24,7 @@ async function main() {
 
   console.log(`Writing collections.json`);
   writeFileSync(
-    "../static/collections.json",
+    "../site/static/collections.json",
     JSON.stringify(collections, undefined, 2)
   );
   console.log("Done!");
