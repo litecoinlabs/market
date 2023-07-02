@@ -20,6 +20,11 @@ variable "bucket_name" {
   default = "llabs-static-site"
 }
 
+variable "acm_certificate_arn" {
+  description = "The ACM certificate ARN"
+  type = string
+}
+
 provider "aws" {
   region = "us-east-1"
 }
@@ -112,6 +117,9 @@ resource "aws_cloudfront_distribution" "static_site_distribution" {
   default_root_object = "index.html"
 
   viewer_certificate {
-    cloudfront_default_certificate = true
+    acm_certificate_arn = var.acm_certificate_arn
+    ssl_support_method  = "sni-only"
   }
+
+  aliases = ["terraform.scaur.nz"]
 }
