@@ -132,7 +132,7 @@ resource "aws_cloudfront_distribution" "static_site_distribution" {
     ssl_support_method  = "sni-only"
   }
 
-  aliases = ["terraform.scaur.nz"]
+  aliases = ["ordinalslite.market"]
 }
 
 output "cf_distribution_domain_name" {
