@@ -117,7 +117,7 @@ resource "aws_cloudfront_distribution" "static_site_distribution" {
       }
     }
     min_ttl                = 0
-    default_ttl            = 3600
+    default_ttl            = 60 # 3600 when out of beta
     max_ttl                = 86400
   }
 
