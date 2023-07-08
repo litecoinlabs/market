@@ -74,7 +74,7 @@ resource "aws_s3_object" "static_files" {
   key = each.key
   source = each.value.source_path
   content = each.value.content
-  etag = each.value.digests.md5
+  etag = filemd5(each.value.source_path)
 
   content_type = lookup(
     local.content_type_override,
