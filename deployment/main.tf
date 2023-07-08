@@ -62,15 +62,26 @@ module "static_files" {
   base_dir = "../site/"
 }
 
+locals {
+  content_type_override = {
+    ".wasm" = "application/wasm"
+  }
+}
+
 resource "aws_s3_object" "static_files" {
   bucket = aws_s3_bucket.static_site.id
   acl = "public-read"
   for_each = module.static_files.files
   key = each.key
   source = each.value.source_path
-  content_type = each.value.content_type
   content = each.value.content
   etag = each.value.digests.md5
+
+  content_type = lookup(
+    local.content_type_override,
+    regex("\\.[^.]+$", each.value.source_path),
+    each.value.content_type
+  )
 }
 
 resource "aws_cloudfront_distribution" "static_site_distribution" {
@@ -122,4 +133,9 @@ resource "aws_cloudfront_distribution" "static_site_distribution" {
   }
 
   aliases = ["terraform.scaur.nz"]
+}
+
+output "cf_distribution_domain_name" {
+  description = "The domain name of the CloudFront distribution"
+  value       = aws_cloudfront_distribution.static_site_distribution.domain_name
 }
