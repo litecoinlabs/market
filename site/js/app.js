@@ -1,3 +1,5 @@
+/* Delete me later; this comment is here to test that Terraform automatic deployments are working when new things are merged into main, and that cache-busting is working for CSS and JS files */
+
 const coin = "LTC";
 const ordinalsExplorerUrl = "https://ordinalslite.com"; // TODO: Replace with LitecoinLabs explorer
 const baseMempoolUrl = "https://litecoinspace.org";
