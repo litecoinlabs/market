@@ -731,6 +731,8 @@ async function main() {
   } else {
     homePage();
   }
+
+  closeDialogsOnClickOutside();
 }
 
 async function inscriptionPage() {
@@ -1526,6 +1528,25 @@ async function collectionsPage() {
 async function listingsPage() {
   await modulesInitializedPromise;
   loadLatestOrders(100, 200);
+}
+
+function closeDialogsOnClickOutside() {
+  document.addEventListener("click", function (event) {
+    const dialogs = document.querySelectorAll("dialog");
+    dialogs.forEach((dialog) => {
+      if (dialog.open) {
+        const rect = dialog.getBoundingClientRect();
+        if (
+          event.clientX < rect.left ||
+          event.clientX > rect.right ||
+          event.clientY < rect.top ||
+          event.clientY > rect.bottom
+        ) {
+          dialog.close();
+        }
+      }
+    });
+  });
 }
 
 window.onload = main();
