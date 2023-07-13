@@ -2,7 +2,7 @@
   "name": "generate-bitcoinjs",
   "type": "module",
   "scripts": {
-    "compile": "browserify -r ./index.js:bitcoin -s bitcoin -o ../site/js/bitcoinjs-lib.js"
+    "compile": "browserify -r ./index.js:bitcoin -s bitcoin -o ../build/js/bitcoinjs-lib.js"
   },
   "dependencies": {
     "bitcoinjs-lib": "^6.1.0",

@@ -59,7 +59,7 @@ resource "aws_s3_bucket_public_access_block" "static_site_public_access_block" {
 
 module "static_files" {
   source = "hashicorp/dir/template"
-  base_dir = "../site/"
+  base_dir = "../build/"
 }
 
 locals {

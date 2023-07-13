@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <link rel="canonical" href="https://ordinalslite.market/" />
@@ -8,49 +8,46 @@
       content="width=device-width, initial-scale=1, shrink-to-fit=no"
     />
     <title>
-      OrdinalsLite.Market - Litecoin Ordinals Decentralized Exchange
+      Home - OrdinalsLite.Market - Litecoin Ordinals Decentralized Exchange
     </title>
     <meta
       name="description"
-      content="Listings - OrdinalsLite.Market is a Trustless Litecoin NFT Marketplace"
+      content="OrdinalsLite.Market is a Trustless Litecoin NFT Marketplace"
     />
     <meta
       name="keywords"
       content="ordinals, litecoin, nfts, nft, nft, ltc, inscriptions, digital artifacts, marketplace"
     />
-
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://ordinalslite.market/" />
     <meta
       property="og:title"
-      content="Listings - OrdinalsLite.Market - Litecoin Ordinals Decentralized Exchange"
+      content="Home - OrdinalsLite.Market - Litecoin Ordinals Decentralized Exchange"
     />
     <meta
       property="og:description"
-      content="OrdinalsLite.Market is an open source zero-fee trustless Litecoin NFT marketplace based on partially signed litecoin transactions"
+      content="OrdinalsLite.Market is an open-source, trustless marketplace for Litecoin NFTs/ordinals/inscriptions"
     />
     <meta
       property="og:image"
       content="https://ordinalslite.market/img/screenshot.png"
     />
-
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image" />
     <meta property="twitter:url" content="https://ordinalslite.market/" />
     <meta
       property="twitter:title"
-      content="Listings - OrdinalsLite.Market - Litecoin Ordinals Decentralized Exchange"
+      content="Home - OrdinalsLite.Market - Litecoin Ordinals Decentralized Exchange"
     />
     <meta
       property="twitter:description"
-      content="OrdinalsLite.Market is an open source zero-fee trustless Litecoin NFT marketplace based on partially signed litecoin transactions"
+      content="OrdinalsLite.Market is an open-source, trustless marketplace for Litecoin NFTs/ordinals/inscriptions"
     />
     <meta
       property="twitter:image"
       content="https://ordinalslite.market/img/screenshot.png"
     />
-
     <!-- Favicon -->
     <link
       rel="apple-touch-icon"
@@ -69,10 +66,8 @@
       sizes="16x16"
       href="img/favicon/favicon-16x16.png"
     />
-
     <meta name="msapplication-TileColor" content="#2d89ef" />
     <meta name="theme-color" content="#ffffff" />
-
     <!-- Bootstrap CSS -->
     <link type="text/css" rel="stylesheet" href="css/bootstrap.min.css" />
     <!-- Pixel CSS -->
@@ -118,16 +113,73 @@
         </ul>
       </nav>
     </header>
+
     <main>
       <!-- Section -->
       <section class="min-vh-100 d-flex align-items-center bg-secondary">
         <div class="container">
           <div class="row justify-content-center">
+            <div
+              class="col-12 d-flex align-items-center justify-content-center mt-4"
+            >
+              <div class="card card-tertiary w-100 fmxw-400">
+                <div class="card-header text-center">
+                  <span>Open Inscription</span>
+                </div>
+                <div class="card-body">
+                  <form action="inscription.html" class="mt-0" method="GET">
+                    <!-- Form -->
+                    <div class="form-group">
+                      <label for="number" class="mb-2"
+                        >Inscription number or id</label
+                      >
+                      <input
+                        id="number"
+                        name="number"
+                        class="form-control"
+                        placeholder="652"
+                        required
+                      />
+                    </div>
+                    <!-- End of Form -->
+                    <button type="submit" class="btn btn-block btn-primary">
+                      Open Inscription
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </div>
+
             <div class="mb-2" style="margin-top: 2rem">
-              <h4 class="text-white">Latest Listings</h4>
+              <h4 class="text-white text-underline">
+                <a href="/listings.html">Latest Listings</a>
+              </h4>
             </div>
             <div
               id="ordersContainer"
+              class="mt-4 flex-grid col-12 d-flex align-items-start justify-content-center"
+            >
+              <h6 class="text-gray my-5">Loading...</h6>
+            </div>
+
+            <div class="mb-2" style="margin-top: 2rem">
+              <h4 class="text-white text-underline text-center">
+                <a href="/collections.html">Collections</a>
+              </h4>
+              <div class="form-group">
+                <input
+                  id="number"
+                  name="number"
+                  class="form-control mt-3 search"
+                  placeholder="Search collections by name"
+                  required
+                  oninput="searchCollections(this.value)"
+                />
+              </div>
+            </div>
+
+            <div
+              id="collectionsContainer"
               class="mt-4 flex-grid col-12 d-flex align-items-start justify-content-center"
             >
               <h6 class="text-gray my-5">Loading...</h6>
@@ -136,7 +188,6 @@
         </div>
       </section>
     </main>
-
     <script src="js/secp256k1.js"></script>
     <script type="module" src="js/bitcoinjs-lib.js"></script>
     <script type="module" src="js/connectjs-lib.js"></script>
