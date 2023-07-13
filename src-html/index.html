@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+  <!-- {{ _head.html }} -->
+  <body>
+    <!-- {{ _header.html }} -->
+    <main>
+      <!-- Section -->
+      <section class="min-vh-100 d-flex align-items-center bg-secondary">
+        <div class="container">
+          <div class="row justify-content-center">
+            <div
+              class="col-12 d-flex align-items-center justify-content-center mt-4"
+            >
+              <div class="card card-tertiary w-100 fmxw-400">
+                <div class="card-header text-center">
+                  <span>Open Inscription</span>
+                </div>
+                <div class="card-body">
+                  <form action="inscription.html" class="mt-0" method="GET">
+                    <!-- Form -->
+                    <div class="form-group">
+                      <label for="number" class="mb-2"
+                        >Inscription number or id</label
+                      >
+                      <input
+                        id="number"
+                        name="number"
+                        class="form-control"
+                        placeholder="652"
+                        required
+                      />
+                    </div>
+                    <!-- End of Form -->
+                    <button type="submit" class="btn btn-block btn-primary">
+                      Open Inscription
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-2" style="margin-top: 2rem">
+              <h4 class="text-white text-underline">
+                <a href="/listings.html">Latest Listings</a>
+              </h4>
+            </div>
+            <div
+              id="ordersContainer"
+              class="mt-4 flex-grid col-12 d-flex align-items-start justify-content-center"
+            >
+              <h6 class="text-gray my-5">Loading...</h6>
+            </div>
+
+            <div class="mb-2" style="margin-top: 2rem">
+              <h4 class="text-white text-underline text-center">
+                <a href="/collections.html">Collections</a>
+              </h4>
+              <div class="form-group">
+                <input
+                  id="number"
+                  name="number"
+                  class="form-control mt-3 search"
+                  placeholder="Search collections by name"
+                  required
+                  oninput="searchCollections(this.value)"
+                />
+              </div>
+            </div>
+
+            <div
+              id="collectionsContainer"
+              class="mt-4 flex-grid col-12 d-flex align-items-start justify-content-center"
+            >
+              <h6 class="text-gray my-5">Loading...</h6>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+    <!-- {{ _scripts.html }} -->
+  </body>
+</html>

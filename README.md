@@ -45,7 +45,7 @@ Generate bitcoinjs-lib with litecoin support:
 cd generate-bitcoinjs
 npm install
 npm run compile
-# site/js/bitcoinjs-lib will be replaced
+# build/js/bitcoinjs-lib will be replaced
 ```
 
 ## Terraform deployment
@@ -58,3 +58,16 @@ npm run compile
 6. When you're happy with the changes, run `terraform apply`
 
 Be sure to add a `CNAME` record (or `ALIAS`, in the case of a root domain) on your domain for the outputted Cloudfront distribution URL given at the end of `terraform apply`
+
+## Build HTML files
+
+Much of the content in the HTML files is duplicated, so we've partially extracted the consistent code into seperate files.
+
+Generate the HTML files in ./build with the following commands:
+
+```bash
+cd run-build
+npm install
+npm run build
+# build/*.html will be replaced
+```
