@@ -29,7 +29,8 @@ Run OrdinalsLite.Market with hot reloading
 docker run -it -d -p 8080:80 --name llabs-market -v $(pwd)/build:/usr/share/nginx/html market
 ```
 
-<img width="1057" alt="Screen Shot 2023-03-06 at 9 40 15 AM" src="https://user-images.githubusercontent.com/115091323/223142708-3eb0e8d7-08d7-4854-9d3f-32ddda7f975d.png">
+![screenshot](https://github.com/litecoinlabs/market/assets/9779954/d6feaad6-692c-4db5-860f-9e9532625afb)
+
 
 ## Litecoin-specific notes:
 
