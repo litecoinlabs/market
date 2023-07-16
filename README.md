@@ -26,7 +26,7 @@ docker build -t market .
 Run OrdinalsLite.Market with hot reloading
 
 ```bash
-docker run -it -d -p 8080:80 --name llabs-market -v $(pwd)/build:/usr/share/nginx/html market
+docker run -it -d -p 80:80 --name llabs-market -v $(pwd)/build:/usr/share/nginx/html market
 ```
 
 ![screenshot](https://github.com/litecoinlabs/market/assets/9779954/d6feaad6-692c-4db5-860f-9e9532625afb)
