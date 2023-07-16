@@ -17,21 +17,28 @@
   margin: 1rem 0 auto;
 }
 
-.navbar-main {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  height: 100vh;
-  width: auto;
-  background: none;
-  border: none;
-}
-
 .navbar-nav {
-  display: block;
+  margin: 0 auto;
 }
 
-.nav-item {
-  text-align: center;
-  margin: 4px auto;
+@media (min-width: 650px) {
+  .navbar-main {
+    top: 0;
+    right: 0;
+    width: auto;
+    height: fit-content;
+    background: none;
+    border: none;
+  }
+
+  .nav-item {
+    text-align: center;
+    margin: 4px auto;
+  }
+}
+
+@media (min-width: 650px) and (max-width: 1200px) {
+  .navbar-nav {
+    display: block;
+  }
 }
