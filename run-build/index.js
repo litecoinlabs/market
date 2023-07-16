@@ -44,7 +44,25 @@ fs.readdir(srcDir, async (err, files) => {
 
   htmlFiles.forEach((file) => {
     const srcFilePath = path.join(srcDir, file);
-    const buildFilePath = path.join(buildDir, file);
+
+    let buildFilePath;
+    if (
+      file === "index.html" ||
+      file === "collection.html" ||
+      file === "inscription.html"
+    ) {
+      // For 'index.html', 'collection.html', and 'inscription.html', do not change the directory structure.
+      // index.html will be displayed by default @ ordinalslite.market
+      // We need to find a solution for query string parameters before disabling this for inscription/collection routes (e.g. inscription.html?number=XYZ)
+      buildFilePath = path.join(buildDir, file);
+    } else {
+      const fileWithoutExtension = path.basename(file, ".html");
+      const newDirectoryPath = path.join(buildDir, fileWithoutExtension);
+      buildFilePath = path.join(newDirectoryPath, "index.html");
+
+      // Create directory if it doesn't exist
+      fs.mkdirSync(newDirectoryPath, { recursive: true });
+    }
 
     fs.readFile(srcFilePath, "utf-8", async (err, data) => {
       if (err) throw err;
