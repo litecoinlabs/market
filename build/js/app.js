@@ -1364,6 +1364,9 @@ async function collectionPage() {
       "inscriptionsContainer"
     );
 
+    // Create a DocumentFragment
+    const inscriptionsFragment = document.createDocumentFragment();
+
     for (const inscription of collection.inscriptions) {
       const inscriptionElement = document.createElement("a");
       inscriptionElement.href = `/inscription.html?number=${inscription.id}`;
@@ -1387,8 +1390,12 @@ async function collectionPage() {
       )}"></iframe>
                     </div>
                 </div>`;
-      inscriptionsContainer.appendChild(inscriptionElement);
+      // Append to the DocumentFragment instead of directly to the DOM
+      inscriptionsFragment.appendChild(inscriptionElement);
     }
+
+    // Append the DocumentFragment to the DOM, triggering only one reflow
+    inscriptionsContainer.appendChild(inscriptionsFragment);
 
     const orders = getLatestOrders(
       collection.inscriptions.length,
@@ -1425,6 +1432,9 @@ function displayCollections(displayedCollections) {
   const collectionsContainer = document.getElementById("collectionsContainer");
   collectionsContainer.innerHTML = "";
 
+  // Create a DocumentFragment
+  const collectionsFragment = document.createDocumentFragment();
+
   for (const collection of displayedCollections) {
     const collectionElement = document.createElement("a");
     collectionElement.href = `/collection.html?slug=${collection.slug}`;
@@ -1443,8 +1453,11 @@ function displayCollections(displayedCollections) {
     )}"></iframe>
                 </div>
             </div>`;
-    collectionsContainer.appendChild(collectionElement);
+    // Append to the DocumentFragment instead of directly to the DOM
+    collectionsFragment.appendChild(collectionElement);
   }
+  // Append the DocumentFragment to the DOM, triggering only one reflow
+  collectionsContainer.appendChild(collectionsFragment);
 }
 
 function searchCollections(searchTerm) {
@@ -1478,6 +1491,9 @@ async function loadLatestOrders(limit = 8, nostrLimit = 25) {
     const ordersContainer = document.getElementById("ordersContainer");
     ordersContainer.innerHTML = "";
 
+    // Create a DocumentFragment
+    const ordersFragment = document.createDocumentFragment();
+
     for await (const order of orders) {
       const orderElement = document.createElement("a");
       orderElement.href = `/inscription.html?number=${order.inscriptionId}`;
@@ -1498,8 +1514,12 @@ async function loadLatestOrders(limit = 8, nostrLimit = 25) {
                         )}</button>
                     </div>
                 </div>`;
-      ordersContainer.appendChild(orderElement);
+      // Append to the DocumentFragment instead of directly to the DOM
+      ordersFragment.appendChild(orderElement);
     }
+
+    // Append the DocumentFragment to the DOM, triggering only one reflow
+    ordersContainer.appendChild(ordersFragment);
   } catch (e) {
     console.error(e);
     console.error(`Error fetching orders:\n` + e.message);
