@@ -5,7 +5,7 @@ const networkName = "mainnet";
 const baseMempoolApiUrl = `${baseMempoolUrl}/api`;
 const litecoinPriceApiUrl =
   "https://api.coingecko.com/api/v3/simple/price?ids=litecoin&vs_currencies=usd";
-const nostrRelayUrl = "wss://nostr.scaur.nz"; // TODO: Remove Nostr, replace with centralized DB for performance
+const nostrRelayUrl = "wss://nostr.ordinalslite.market"; // TODO: Remove Nostr, replace with centralized DB for performance
 const collectionsRepo = "litecoinlabs/collections";
 const exchangeName = "ordinalslite.market";
 const feeLevel = "hourFee"; // "fastestFee" || "halfHourFee" || "hourFee" || "economyFee" || "minimumFee"
