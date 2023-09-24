@@ -14,7 +14,7 @@ const dummyUtxoValue = dustLimit;
 const nostrOrderEventKind = 802;
 const txHexByIdCache = {};
 const urlParams = new URLSearchParams(window.location.search);
-const numberOfDummyUtxosToCreate = 1;
+const numberOfDummyUtxosToCreate = 2;
 const wallets = [
   {
     name: "Litescribe",
