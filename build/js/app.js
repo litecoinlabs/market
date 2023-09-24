@@ -15,6 +15,7 @@ const nostrOrderEventKind = 802;
 const txHexByIdCache = {};
 const urlParams = new URLSearchParams(window.location.search);
 const numberOfDummyUtxosToCreate = 2;
+const platformFeeAddress = "ltc1qpj7npp4dl82f805n9lpwwypx89wt832awqkuss";
 const wallets = [
   {
     name: "Litescribe",
@@ -33,7 +34,7 @@ let recommendedFeeRate;
 let sellerSignedPsbt;
 let network;
 let payerUtxos = [];
-let dummyUtxo;
+let dummyUtxos = [];
 let paymentUtxos;
 let inscription;
 let nostrRelay;
@@ -1070,13 +1071,19 @@ async function inscriptionPage() {
     const potentialDummyUtxos = payerUtxos.filter(
       (utxo) => utxo.value <= dummyUtxoValue
     );
-    dummyUtxo = undefined;
+    dummyUtxos = [];
+
+    let dummyUtxosFound = 0;
 
     for (const potentialDummyUtxo of potentialDummyUtxos) {
+      if (dummyUtxosFound >= numberOfDummyUtxosToCreate) {
+        break;
+      }
+
       if (!(await doesUtxoContainInscription(potentialDummyUtxo))) {
         hideDummyUtxoElements();
-        dummyUtxo = potentialDummyUtxo;
-        break;
+        dummyUtxos.push(potentialDummyUtxo);
+        dummyUtxosFound++;
       }
     }
 
@@ -1084,7 +1091,7 @@ async function inscriptionPage() {
     let vins;
     let vouts;
 
-    if (!dummyUtxo) {
+    if (!dummyUtxos.length) {
       showDummyUtxoElements();
 
       minimumValueRequired = numberOfDummyUtxosToCreate * dummyUtxoValue;
@@ -1128,12 +1135,14 @@ async function inscriptionPage() {
       paymentUtxos
     );
 
-    await displayBuyPsbt(
-      psbt,
-      payerAddress,
-      `Sign and broadcast this transaction to create a dummy UTXO`,
-      `Dummy UTXO created successfully! Refresh the page to buy the inscription.`
-    );
+    if (!!psbt) {
+      await displayBuyPsbt(
+        psbt,
+        payerAddress,
+        `Sign and broadcast this transaction to create a dummy UTXO`,
+        `Dummy UTXO created successfully! Refresh the page to buy the inscription.`
+      );
+    }
   };
 
   generatePSBTGeneratingDummyUtxos = async (
@@ -1144,6 +1153,13 @@ async function inscriptionPage() {
     console.log("generatePSBTGeneratingDummyUtxos called");
     const psbt = new bitcoin.Psbt({ network });
     let totalValue = 0;
+
+    if (!payerUtxos?.length) {
+      alert(
+        "Couldn't find any funds in your address to make dummy UTXOs with, please top up first"
+      );
+      return;
+    }
 
     for (const utxo of payerUtxos) {
       const tx = bitcoin.Transaction.fromHex(await getTxHexById(utxo.txid));
@@ -1199,22 +1215,28 @@ async function inscriptionPage() {
     receiverAddress,
     price,
     paymentUtxos,
-    dummyUtxo
+    dummyUtxos
   ) => {
     console.log("generatePSBTBuyingInscription called");
     const psbt = new bitcoin.Psbt({ network });
     let totalValue = 0;
     let totalPaymentValue = 0;
 
-    // Add dummy utxo input
-    const tx = bitcoin.Transaction.fromHex(await getTxHexById(dummyUtxo.txid));
-    for (const output in tx.outs) {
-      try {
-        tx.setWitness(parseInt(output), []);
-      } catch {}
-    }
+    // Add two dummy utxos as inputs
+    dummyUtxos = dummyUtxos.slice(0, 2);
+    for (let i = 0; i < dummyUtxos.length; i++) {
+      const dummyUtxo = dummyUtxos[i];
+      // Add dummy utxo input
+      const tx = bitcoin.Transaction.fromHex(
+        await getTxHexById(dummyUtxo.txid)
+      );
+      for (const output in tx.outs) {
+        try {
+          tx.setWitness(parseInt(output), []);
+        } catch {}
+      }
 
-    /*if (installedWalletName === "OrdinalSafe") {
+      /*if (installedWalletName === "OrdinalSafe") {
       psbt.addInput({
         hash: dummyUtxo.txid,
         index: dummyUtxo.vout,
@@ -1222,18 +1244,25 @@ async function inscriptionPage() {
         witnessUtxo: tx.outs[dummyUtxo.vout],
       });
     } else {*/
-    psbt.addInput({
-      hash: dummyUtxo.txid,
-      index: dummyUtxo.vout,
-      nonWitnessUtxo: tx.toBuffer(),
-      // witnessUtxo: tx.outs[dummyUtxo.vout],
+      psbt.addInput({
+        hash: dummyUtxo.txid,
+        index: dummyUtxo.vout,
+        nonWitnessUtxo: tx.toBuffer(),
+        // witnessUtxo: tx.outs[dummyUtxo.vout],
+      });
+      //}
+    }
+
+    // Add receiving dummy output
+    psbt.addOutput({
+      address: receiverAddress,
+      value: dummyUtxoValue,
     });
-    //}
 
     // Add inscription output
     psbt.addOutput({
       address: receiverAddress,
-      value: dummyUtxo.value + Number(inscription["output value"]),
+      value: Number(inscription["output value"]),
     });
 
     // Add payer signed input
@@ -1244,6 +1273,15 @@ async function inscriptionPage() {
     // Add payer output
     psbt.addOutput({
       ...sellerSignedPsbt.data.globalMap.unsignedTx.tx.outs[0],
+    });
+
+    // Add platform service fee
+    const platformFee =
+      parseInt(0.05 * price) <= dustLimit ? dustLimit : parseInt(0.05 * price);
+
+    psbt.addOutput({
+      address: platformFeeAddress,
+      value: platformFee,
     });
 
     // Add payment utxo inputs
@@ -1275,7 +1313,7 @@ async function inscriptionPage() {
       totalPaymentValue += utxo.value;
     }
 
-    // Create a new dummy utxo output for the next purchase
+    // Create new dummy utxo output for the next purchase
     psbt.addOutput({
       address: payerAddress,
       value: dummyUtxoValue,
@@ -1287,12 +1325,13 @@ async function inscriptionPage() {
       await recommendedFeeRate
     );
 
-    const changeValue = totalValue - dummyUtxo.value - price - fee;
+    const changeValue =
+      totalValue - dummyUtxoValue * 2 - price - platformFee - fee;
 
     if (changeValue < 0) {
       throw `Your wallet address doesn't have enough funds to buy this inscription.
 Price:          ${satToBtc(price)} ${coin}
-Fees:       ${satToBtc(fee + dummyUtxoValue)} ${coin}
+Fees:       ${satToBtc(fee + platformFee + dummyUtxoValue * 2)} ${coin}
 You have:   ${satToBtc(totalPaymentValue)} ${coin}
 Required:   ${satToBtc(totalValue - changeValue)} ${coin}
 Missing:     ${satToBtc(-changeValue)} ${coin}`;
@@ -1349,7 +1388,7 @@ See transaction details on <a href="${baseMempoolUrl}/tx/${txId}" target="_blank
         receiverAddress,
         price,
         paymentUtxos,
-        dummyUtxo
+        dummyUtxos
       );
     } catch (e) {
       return alert(e);
