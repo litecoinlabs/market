@@ -1474,9 +1474,7 @@ async function collectionPage() {
                           inscription.meta.name
                         )}</span>
                     </div>
-                    <div class="card-body" style="padding: 6px 7px 7px 7px" id="inscription_${
-                      inscription.id
-                    }">
+                    <div class="card-body" id="inscription_${inscription.id}">
                         <iframe style="pointer-events: none" sandbox=allow-scripts
                             scrolling=no loading=lazy
                             src="${ordinalsExplorerUrl}/preview/${inscription.id.replaceAll(
@@ -1540,7 +1538,7 @@ function displayCollections(displayedCollections) {
                 <div class="card-header text-center">
                     <span>${sanitizeHTML(collection.name)}</span>
                 </div>
-                <div class="card-body" style="padding: 6px 7px 7px 7px">
+                <div class="card-body">
                     <iframe style="pointer-events: none" sandbox=allow-scripts
                         scrolling=no loading=lazy
                         src="${ordinalsExplorerUrl}/preview/${collection.inscription_icon?.replaceAll(
@@ -1602,7 +1600,7 @@ async function loadLatestOrders(limit = 8, nostrLimit = 25) {
                     <div class="card-header text-center">
                         <span>Inscription #${order.number}</span>
                     </div>
-                    <div class="card-body" style="padding: 6px 7px 7px 7px">
+                    <div class="card-body">
                         <iframe style="pointer-events: none" sandbox=allow-scripts
                             scrolling=no loading=lazy
                             src="${ordinalsExplorerUrl}/preview/${

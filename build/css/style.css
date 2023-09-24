@@ -2,13 +2,8 @@
   background: linear-gradient(to right, #3574c1, #008081) !important;
 }
 
-.credits-list {
-  padding-left: 1rem;
-  margin-bottom: 1rem;
-}
-
 .credits-list li {
-  padding: 0.5rem 0;
+  margin: 1rem 0;
 }
 
 .credits-text-big {
@@ -17,28 +12,87 @@
   margin: 1rem 0 auto;
 }
 
-.navbar-nav {
+.navbar-main {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
+
+.navbar-main ul {
   margin: 0 auto;
 }
 
-@media (min-width: 650px) {
-  .navbar-main {
-    top: 0;
-    right: 0;
-    width: auto;
-    height: fit-content;
-    background: none;
-    border: none;
-  }
+.text-white a {
+  color: white;
+}
 
-  .nav-item {
-    text-align: center;
-    margin: 4px auto;
+.text-center {
+  text-align: center !important;
+}
+
+.card {
+  text-align: center;
+}
+
+.form-group input {
+  min-width: 376px;
+  text-align: center;
+}
+
+.flex-grid {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.container iframe {
+  max-width: 250px;
+  width: 100%;
+  display: block;
+  margin: 0 auto;
+  aspect-ratio: 1 / 1;
+  border: none;
+}
+
+#inscriptionsContainer iframe,
+#collectionsContainer iframe,
+#ordersContainer iframe {
+  pointer-events: none;
+  max-width: 185px;
+  border-radius: 5px;
+}
+
+@media (max-width: 767.98px) {
+  #inscriptionsContainer .fmxw-300,
+  #collectionsContainer .fmxw-300,
+  #ordersContainer .fmxw-300 {
+    max-width: 155px !important;
+  }
+  .search {
+    width: 300px !important;
   }
 }
 
-@media (min-width: 650px) and (max-width: 1200px) {
-  .navbar-nav {
-    display: block;
-  }
+dialog {
+  overflow: hidden;
+}
+
+.flex-grid .card,
+.flex-grid .card-header {
+  border: none;
+  background: transparent;
+}
+
+.flex-grid .card-header {
+  background: rgba(255, 255, 255, 0.5);
+  color: black;
+  width: auto;
+  padding: 5px;
+  margin: 10px;
+  border-radius: 5px;
+}
+
+.flex-grid .card-body {
+  padding: 0;
 }
