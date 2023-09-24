@@ -9,7 +9,8 @@ const nostrRelayUrl = "wss://nostr.ordinalslite.market"; // TODO: Remove Nostr, 
 const collectionsRepo = "litecoinlabs/collections";
 const exchangeName = "ordinalslite.market";
 const feeLevel = "hourFee"; // "fastestFee" || "halfHourFee" || "hourFee" || "economyFee" || "minimumFee"
-const dummyUtxoValue = 3_000; // https://litecoin.info/index.php/Transaction_fees implies a dust limit of 100k, but in testing 3k was fine...
+const dustLimit = 3_000; // https://litecoin.info/index.php/Transaction_fees implies a dust limit of 100k, but in testing 3k was fine...
+const dummyUtxoValue = dustLimit;
 const nostrOrderEventKind = 802;
 const txHexByIdCache = {};
 const urlParams = new URLSearchParams(window.location.search);
@@ -31,7 +32,7 @@ let bitcoinPrice;
 let recommendedFeeRate;
 let sellerSignedPsbt;
 let network;
-let payerUtxos;
+let payerUtxos = [];
 let dummyUtxo;
 let paymentUtxos;
 let inscription;
@@ -837,6 +838,14 @@ async function inscriptionPage() {
 
   generateSalePsbt = async () => {
     price = Number(document.getElementById("price").value);
+
+    if (btcToSat(price) <= dustLimit) {
+      alert(
+        `Price is below dust limit (${dustLimit} lit). Operation cancelled.`
+      );
+      return;
+    }
+
     const paymentAddress = document.getElementById("paymentAddress").value;
     psbt = await generatePSBTListingInscriptionForSale(
       inscription.output,
@@ -1325,6 +1334,8 @@ See transaction details on <a href="${baseMempoolUrl}/tx/${txId}" target="_blank
       alert(e);
     }
   }
+
+  document.getElementById("price").setAttribute("min", satToBtc(dustLimit));
 }
 
 async function collectionPage() {
