@@ -4,7 +4,7 @@ const prettier = require("prettier");
 
 // Directories
 const srcDir = "../src-html";
-const buildDir = "../build";
+const buildDir = "../gh-pages";
 
 const fileNameMap = {
   "collection.html": "Collection",

@@ -24,7 +24,7 @@ async function main() {
 
   console.log(`Writing collections.json`);
   writeFileSync(
-    "../build/static/collections.json",
+    "../gh-pages/static/collections.json",
     JSON.stringify(collections, undefined, 2)
   );
   console.log("Done!");

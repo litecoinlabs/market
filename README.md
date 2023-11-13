@@ -26,7 +26,7 @@ docker build -t market .
 Run OrdinalsLite.Market with hot reloading
 
 ```bash
-docker run -it -d -p 8080:80 --name llabs-market -v $(pwd)/build:/usr/share/nginx/html market
+docker run -it -d -p 8080:80 --name llabs-market -v $(pwd)/gh-pages:/usr/share/nginx/html market
 ```
 
 ![screenshot](https://github.com/litecoinlabs/market/assets/9779954/d6feaad6-692c-4db5-860f-9e9532625afb)
@@ -58,11 +58,11 @@ Be sure to add a `CNAME` record (or `ALIAS`, in the case of a root domain) on yo
 
 Much of the content in the HTML files is duplicated, so we've partially extracted the consistent code into seperate files.
 
-Generate the HTML files in ./build with the following commands:
+Generate the HTML files in ./gh-pages with the following commands:
 
 ```bash
 cd run-build
 npm install
 npm run build
-# build/*.html will be replaced
+# gh-pages/*.html will be replaced
 ```
