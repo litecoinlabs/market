@@ -9,11 +9,13 @@ const nostrRelayUrl = "wss://nostr.ordinalslite.market"; // TODO: Remove Nostr, 
 const collectionsRepo = "litecoinlabs/collections";
 const exchangeName = "ordinalslite.market";
 const feeLevel = "hourFee"; // "fastestFee" || "halfHourFee" || "hourFee" || "economyFee" || "minimumFee"
-const dummyUtxoValue = 3_000; // https://litecoin.info/index.php/Transaction_fees implies a dust limit of 100k, but in testing 3k was fine...
+const dustLimit = 3_000; // https://litecoin.info/index.php/Transaction_fees implies a dust limit of 100k, but in testing 3k was fine...
+const dummyUtxoValue = dustLimit;
 const nostrOrderEventKind = 802;
 const txHexByIdCache = {};
 const urlParams = new URLSearchParams(window.location.search);
-const numberOfDummyUtxosToCreate = 1;
+const numberOfDummyUtxosToCreate = 2;
+const platformFeeAddress = "ltc1qpj7npp4dl82f805n9lpwwypx89wt832awqkuss";
 const wallets = [
   {
     name: "Litescribe",
@@ -31,8 +33,8 @@ let bitcoinPrice;
 let recommendedFeeRate;
 let sellerSignedPsbt;
 let network;
-let payerUtxos;
-let dummyUtxo;
+let payerUtxos = [];
+let dummyUtxos = [];
 let paymentUtxos;
 let inscription;
 let nostrRelay;
@@ -52,6 +54,7 @@ let generatePSBTGeneratingDummyUtxos;
 let btnBuyInscriptionNow;
 
 async function selectUtxos(utxos, amount, vins, vouts, recommendedFeeRate) {
+  console.log("selectUtxos called");
   const selectedUtxos = [];
   let selectedAmount = 0;
 
@@ -91,6 +94,7 @@ ${utxos.map((x) => `${x.txid}:${x.vout}`).join("\n")}`);
 }
 
 function base64ToHex(str) {
+  console.log("base64ToHex called");
   return atob(str)
     .split("")
     .map((c) => c.charCodeAt(0).toString(16).padStart(2, "0"))
@@ -98,6 +102,7 @@ function base64ToHex(str) {
 }
 
 function getInstalledWalletName() {
+  console.log("getInstalledWalletName called");
   if (typeof window.litescribe !== "undefined") {
     return "Litescribe";
   }
@@ -158,6 +163,7 @@ function getInstalledWalletName() {
  * @returns {string | undefined}
  */
 async function getWalletAddress(type = "cardinal") {
+  console.log("getWalletAddress called");
   if (typeof window.litescribe !== "undefined") {
     return (await litescribe.requestAccounts())?.[0];
   }
@@ -173,6 +179,7 @@ async function getWalletAddress(type = "cardinal") {
 }
 
 function removeHashFromUrl() {
+  console.log("removeHashFromUrl called");
   const uri = window.location.toString();
 
   if (uri.indexOf("#") > 0) {
@@ -183,6 +190,7 @@ function removeHashFromUrl() {
 }
 
 async function getLowestPriceSellPSBTForUtxo(utxo) {
+  console.log("getLowestPriceSellPSBTForUtxo called");
   await nostrRelay.connect();
   const orders = (
     await nostrRelay.list([
@@ -208,6 +216,7 @@ async function getLowestPriceSellPSBTForUtxo(utxo) {
 }
 
 function validateSellerPSBTAndExtractPrice(sellerSignedPsbtBase64, utxo) {
+  console.log("validateSellerPSBTAndExtractPrice called");
   try {
     sellerSignedPsbt = bitcoin.Psbt.fromBase64(sellerSignedPsbtBase64, {
       network,
@@ -254,6 +263,7 @@ function publishSellerPsbt(
   inscriptionUtxo,
   priceInSats
 ) {
+  console.log("publishSellerPsbt called");
   return new Promise(async (resolve, reject) => {
     try {
       await nostrRelay.connect();
@@ -294,6 +304,7 @@ function publishSellerPsbt(
 }
 
 async function doesUtxoContainInscription(utxo) {
+  console.log("doesUtxoContainInscription called");
   const html = await fetch(
     `${ordinalsExplorerUrl}/output/${utxo.txid}:${utxo.vout}`
   ).then((response) => response.text());
@@ -307,6 +318,7 @@ function calculateFee(
   recommendedFeeRate,
   includeChangeOutput = true
 ) {
+  console.log("calculateFee called");
   const baseTxSize = 10;
   const inSize = 180;
   const outSize = 34;
@@ -322,6 +334,7 @@ function calculateFee(
 }
 
 function getExplorerLink(inscriptionId) {
+  console.log("getExplorerLink called");
   return `${ordinalsExplorerUrl}/inscription/${inscriptionId.replace(
     ":",
     "i"
@@ -329,6 +342,7 @@ function getExplorerLink(inscriptionId) {
 }
 
 async function getTxHexById(txId) {
+  console.log("getTxHexById called");
   if (!txHexByIdCache[txId]) {
     txHexByIdCache[txId] = await fetch(
       `${baseMempoolApiUrl}/tx/${txId}/hex`
@@ -339,18 +353,21 @@ async function getTxHexById(txId) {
 }
 
 async function getAddressMempoolTxIds(address) {
+  console.log("getAddressMempoolTxIds called");
   return await fetch(`${baseMempoolApiUrl}/address/${address}/txs/mempool`)
     .then((response) => response.json())
     .then((txs) => txs.map((tx) => tx.txid));
 }
 
 async function getAddressUtxos(address) {
+  console.log("getAddressUtxos called");
   return await fetch(`${baseMempoolApiUrl}/address/${address}/utxo`).then(
     (response) => response.json()
   );
 }
 
 function openInscription() {
+  console.log("openInscription called");
   var inscriptionIdentifier = document.getElementById(
     "inscriptionIdentifier"
   ).value;
@@ -360,6 +377,7 @@ function openInscription() {
 }
 
 async function getInscriptionIdByNumber(inscriptionNumber) {
+  console.log("getInscriptionIdByNumber called");
   const html = await fetch(
     ordinalsExplorerUrl + "/inscriptions/" + inscriptionNumber
   ).then((response) => response.text());
@@ -368,6 +386,7 @@ async function getInscriptionIdByNumber(inscriptionNumber) {
 }
 
 async function getCollection(collectionSlug) {
+  console.log("getCollection called");
   if (collectionSlug == "under-10") {
     return await fetch(`/static/under-10.json`).then((response) =>
       response.json()
@@ -390,12 +409,14 @@ async function getCollection(collectionSlug) {
 }
 
 async function getCollections() {
+  console.log("getCollections called");
   return fetch(`/static/collections.json`)
     .then((response) => response.json())
     .then((collections) => collections.sort((a, b) => 0.5 - Math.random()));
 }
 
 function satsToFormattedDollarString(sats, _bitcoinPrice) {
+  console.log("satsToFormattedDollarString called");
   return (satToBtc(sats) * _bitcoinPrice).toLocaleString(undefined, {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
@@ -403,6 +424,7 @@ function satsToFormattedDollarString(sats, _bitcoinPrice) {
 }
 
 async function* getLatestOrders(limit, nostrLimit = 20, filters = {}) {
+  console.log("getLatestOrders called");
   await nostrRelay.connect();
   const latestOrders = [];
   const inscriptionDataCache = {};
@@ -462,6 +484,7 @@ async function* getLatestOrders(limit, nostrLimit = 20, filters = {}) {
 }
 
 function copyInput(btn, inputId) {
+  console.log("copyInput called");
   const input = document.getElementById(inputId);
   input.select();
   input.setSelectionRange(0, 9999999);
@@ -474,6 +497,7 @@ function copyInput(btn, inputId) {
 }
 
 function downloadInput(inputId, filename) {
+  console.log("downloadInput called");
   const input = document.getElementById(inputId);
   const hiddenElement = document.createElement("a");
   hiddenElement.href = "data:attachment/text," + encodeURI(input.value);
@@ -487,6 +511,7 @@ const toXOnly = (pubKey) =>
 const range = (n) => Array.from(Array(n).keys());
 
 async function signPSBTUsingWallet(psbtBase64) {
+  console.log("signPSBTUsingWallet called");
   await getWalletAddress();
 
   if (installedWalletName == "Litescribe") {
@@ -521,6 +546,7 @@ async function signPSBTUsingWallet(psbtBase64) {
 }
 
 async function signPSBTUsingWalletIntoInput(inputId, signedInputId) {
+  console.log("signPSBTUsingWalletIntoInput called");
   const input = document.getElementById(inputId);
   const signedInput = document.getElementById(signedInputId);
 
@@ -533,6 +559,7 @@ async function signPSBTUsingWalletIntoInput(inputId, signedInputId) {
 }
 
 async function signPSBTUsingWalletAndBroadcast(inputId) {
+  console.log("signPSBTUsingWalletAndBroadcast called");
   const input = document.getElementById(inputId);
 
   try {
@@ -574,6 +601,7 @@ async function getInscriptionDataById(
   inscriptionId,
   verifyIsInscriptionNumber
 ) {
+  console.log("getInscriptionDataById called");
   const html = await fetch(
     ordinalsExplorerUrl + "/inscription/" + inscriptionId
   ).then((response) => response.text());
@@ -606,12 +634,14 @@ async function getInscriptionDataById(
 }
 
 function sanitizeHTML(str) {
+  console.log("sanitizeHTML called");
   var temp = document.createElement("div");
   temp.textContent = str;
   return temp.innerHTML;
 }
 
 function getHashQueryStringParam(paramName) {
+  console.log("getHashQueryStringParam called");
   const params = new URLSearchParams(window.location.hash.substr(1));
   return params.get(paramName);
 }
@@ -621,6 +651,7 @@ async function generatePSBTListingInscriptionForSale(
   price,
   paymentAddress
 ) {
+  console.log("generatePSBTListingInscriptionForSale called");
   let psbt = new bitcoin.Psbt({ network });
 
   const [ordinalUtxoTxId, ordinalUtxoVout] = ordinalOutput.split(":");
@@ -665,14 +696,17 @@ async function generatePSBTListingInscriptionForSale(
 }
 
 function btcToSat(btc) {
+  console.log("btcToSat called");
   return Math.floor(Number(btc) * Math.pow(10, 8));
 }
 
 function satToBtc(sat) {
+  console.log("satToBtc called");
   return Number(sat) / Math.pow(10, 8);
 }
 
 async function main() {
+  console.log("main called");
   bitcoinPrice = fetch(litecoinPriceApiUrl)
     .then((response) => response.json())
     .then((data) => data?.litecoin?.usd);
@@ -736,6 +770,7 @@ async function main() {
 }
 
 async function inscriptionPage() {
+  console.log("inscriptionPage called");
   await modulesInitializedPromise;
   network = bitcoin.networks.bitcoin;
 
@@ -788,6 +823,7 @@ async function inscriptionPage() {
   );
 
   const processSellerPsbt = async (_sellerSignedPsbt) => {
+    console.log("processSellerPsbt called");
     const sellerSignedPsbtBase64 = (_sellerSignedPsbt || "")
       .trim()
       .replaceAll(" ", "+");
@@ -829,6 +865,7 @@ async function inscriptionPage() {
   };
 
   listInscriptionForSale = async () => {
+    console.log("listInscriptionForSale called");
     document.getElementById("listDialog").showModal();
   };
 
@@ -836,7 +873,16 @@ async function inscriptionPage() {
   let psbt;
 
   generateSalePsbt = async () => {
+    console.log("generateSalePsbt called");
     price = Number(document.getElementById("price").value);
+
+    if (btcToSat(price) <= dustLimit) {
+      alert(
+        `Price is below dust limit (${dustLimit} lit). Operation cancelled.`
+      );
+      return;
+    }
+
     const paymentAddress = document.getElementById("paymentAddress").value;
     psbt = await generatePSBTListingInscriptionForSale(
       inscription.output,
@@ -855,6 +901,7 @@ async function inscriptionPage() {
   };
 
   submitSignedSalePsbt = async () => {
+    console.log("submitSignedSalePsbt called");
     const btn = document.getElementById("btnSubmitSignedSalePsbt");
     const originalBtnTest = btn.textContent;
     btn.textContent = "Submitting...";
@@ -965,6 +1012,7 @@ async function inscriptionPage() {
   };
 
   buyInscriptionNow = async () => {
+    console.log("buyInscriptionNow called");
     document.getElementById("payerAddress").value =
       (await getWalletAddress("cardinal")) ||
       localStorage.getItem("payerAddress") ||
@@ -981,6 +1029,7 @@ async function inscriptionPage() {
   };
 
   function hideDummyUtxoElements() {
+    console.log("hideDummyUtxoElements called");
     for (const el of document.getElementsByClassName("notDummy")) {
       el.style.display = "revert";
     }
@@ -991,6 +1040,7 @@ async function inscriptionPage() {
   }
 
   function showDummyUtxoElements() {
+    console.log("showDummyUtxoElements called");
     for (const el of document.getElementsByClassName("notDummy")) {
       el.style.display = "none";
     }
@@ -1001,6 +1051,7 @@ async function inscriptionPage() {
   }
 
   updatePayerAddress = async () => {
+    console.log("updatePayerAddress called");
     const payerAddress = document.getElementById("payerAddress").value;
     document.getElementById("receiverAddress").placeholder = payerAddress;
     localStorage.setItem("payerAddress", payerAddress);
@@ -1020,13 +1071,19 @@ async function inscriptionPage() {
     const potentialDummyUtxos = payerUtxos.filter(
       (utxo) => utxo.value <= dummyUtxoValue
     );
-    dummyUtxo = undefined;
+    dummyUtxos = [];
+
+    let dummyUtxosFound = 0;
 
     for (const potentialDummyUtxo of potentialDummyUtxos) {
+      if (dummyUtxosFound >= numberOfDummyUtxosToCreate) {
+        break;
+      }
+
       if (!(await doesUtxoContainInscription(potentialDummyUtxo))) {
         hideDummyUtxoElements();
-        dummyUtxo = potentialDummyUtxo;
-        break;
+        dummyUtxos.push(potentialDummyUtxo);
+        dummyUtxosFound++;
       }
     }
 
@@ -1034,7 +1091,7 @@ async function inscriptionPage() {
     let vins;
     let vouts;
 
-    if (!dummyUtxo) {
+    if (!dummyUtxos.length) {
       showDummyUtxoElements();
 
       minimumValueRequired = numberOfDummyUtxosToCreate * dummyUtxoValue;
@@ -1078,12 +1135,14 @@ async function inscriptionPage() {
       paymentUtxos
     );
 
-    await displayBuyPsbt(
-      psbt,
-      payerAddress,
-      `Sign and broadcast this transaction to create a dummy UTXO`,
-      `Dummy UTXO created successfully! Refresh the page to buy the inscription.`
-    );
+    if (!!psbt) {
+      await displayBuyPsbt(
+        psbt,
+        payerAddress,
+        `Sign and broadcast this transaction to create a dummy UTXO`,
+        `Dummy UTXO created successfully! Refresh the page to buy the inscription.`
+      );
+    }
   };
 
   generatePSBTGeneratingDummyUtxos = async (
@@ -1091,8 +1150,16 @@ async function inscriptionPage() {
     numberOfDummyUtxosToCreate,
     payerUtxos
   ) => {
+    console.log("generatePSBTGeneratingDummyUtxos called");
     const psbt = new bitcoin.Psbt({ network });
     let totalValue = 0;
+
+    if (!payerUtxos?.length) {
+      alert(
+        "Couldn't find any funds in your address to make dummy UTXOs with, please top up first"
+      );
+      return;
+    }
 
     for (const utxo of payerUtxos) {
       const tx = bitcoin.Transaction.fromHex(await getTxHexById(utxo.txid));
@@ -1148,21 +1215,28 @@ async function inscriptionPage() {
     receiverAddress,
     price,
     paymentUtxos,
-    dummyUtxo
+    dummyUtxos
   ) => {
+    console.log("generatePSBTBuyingInscription called");
     const psbt = new bitcoin.Psbt({ network });
     let totalValue = 0;
     let totalPaymentValue = 0;
 
-    // Add dummy utxo input
-    const tx = bitcoin.Transaction.fromHex(await getTxHexById(dummyUtxo.txid));
-    for (const output in tx.outs) {
-      try {
-        tx.setWitness(parseInt(output), []);
-      } catch {}
-    }
+    // Add two dummy utxos as inputs
+    dummyUtxos = dummyUtxos.slice(0, 2);
+    for (let i = 0; i < dummyUtxos.length; i++) {
+      const dummyUtxo = dummyUtxos[i];
+      // Add dummy utxo input
+      const tx = bitcoin.Transaction.fromHex(
+        await getTxHexById(dummyUtxo.txid)
+      );
+      for (const output in tx.outs) {
+        try {
+          tx.setWitness(parseInt(output), []);
+        } catch {}
+      }
 
-    /*if (installedWalletName === "OrdinalSafe") {
+      /*if (installedWalletName === "OrdinalSafe") {
       psbt.addInput({
         hash: dummyUtxo.txid,
         index: dummyUtxo.vout,
@@ -1170,18 +1244,25 @@ async function inscriptionPage() {
         witnessUtxo: tx.outs[dummyUtxo.vout],
       });
     } else {*/
-    psbt.addInput({
-      hash: dummyUtxo.txid,
-      index: dummyUtxo.vout,
-      nonWitnessUtxo: tx.toBuffer(),
-      // witnessUtxo: tx.outs[dummyUtxo.vout],
+      psbt.addInput({
+        hash: dummyUtxo.txid,
+        index: dummyUtxo.vout,
+        nonWitnessUtxo: tx.toBuffer(),
+        // witnessUtxo: tx.outs[dummyUtxo.vout],
+      });
+      //}
+    }
+
+    // Add receiving dummy output
+    psbt.addOutput({
+      address: receiverAddress,
+      value: dummyUtxoValue,
     });
-    //}
 
     // Add inscription output
     psbt.addOutput({
       address: receiverAddress,
-      value: dummyUtxo.value + Number(inscription["output value"]),
+      value: Number(inscription["output value"]),
     });
 
     // Add payer signed input
@@ -1192,6 +1273,15 @@ async function inscriptionPage() {
     // Add payer output
     psbt.addOutput({
       ...sellerSignedPsbt.data.globalMap.unsignedTx.tx.outs[0],
+    });
+
+    // Add platform service fee
+    const platformFee =
+      parseInt(0.05 * price) <= dustLimit ? dustLimit : parseInt(0.05 * price);
+
+    psbt.addOutput({
+      address: platformFeeAddress,
+      value: platformFee,
     });
 
     // Add payment utxo inputs
@@ -1223,7 +1313,7 @@ async function inscriptionPage() {
       totalPaymentValue += utxo.value;
     }
 
-    // Create a new dummy utxo output for the next purchase
+    // Create new dummy utxo output for the next purchase
     psbt.addOutput({
       address: payerAddress,
       value: dummyUtxoValue,
@@ -1235,12 +1325,13 @@ async function inscriptionPage() {
       await recommendedFeeRate
     );
 
-    const changeValue = totalValue - dummyUtxo.value - price - fee;
+    const changeValue =
+      totalValue - dummyUtxoValue * 2 - price - platformFee - fee;
 
     if (changeValue < 0) {
       throw `Your wallet address doesn't have enough funds to buy this inscription.
 Price:          ${satToBtc(price)} ${coin}
-Fees:       ${satToBtc(fee + dummyUtxoValue)} ${coin}
+Fees:       ${satToBtc(fee + platformFee + dummyUtxoValue * 2)} ${coin}
 You have:   ${satToBtc(totalPaymentValue)} ${coin}
 Required:   ${satToBtc(totalValue - changeValue)} ${coin}
 Missing:     ${satToBtc(-changeValue)} ${coin}`;
@@ -1256,6 +1347,7 @@ Missing:     ${satToBtc(-changeValue)} ${coin}`;
   };
 
   displayBuyPsbt = async (psbt, payerAddress, title, successMessage) => {
+    console.log("displayBuyPsbt called");
     document.getElementById("buyStep1").style.display = "none";
     document.getElementById("buyStep2").style.display = "revert";
 
@@ -1296,7 +1388,7 @@ See transaction details on <a href="${baseMempoolUrl}/tx/${txId}" target="_blank
         receiverAddress,
         price,
         paymentUtxos,
-        dummyUtxo
+        dummyUtxos
       );
     } catch (e) {
       return alert(e);
@@ -1325,9 +1417,12 @@ See transaction details on <a href="${baseMempoolUrl}/tx/${txId}" target="_blank
       alert(e);
     }
   }
+
+  document.getElementById("price").setAttribute("min", satToBtc(dustLimit));
 }
 
 async function collectionPage() {
+  console.log("collectionPage called");
   try {
     let collection;
     try {
@@ -1429,6 +1524,7 @@ async function collectionPage() {
 }
 
 function displayCollections(displayedCollections) {
+  console.log("displayCollections called");
   const collectionsContainer = document.getElementById("collectionsContainer");
   collectionsContainer.innerHTML = "";
 
@@ -1461,6 +1557,7 @@ function displayCollections(displayedCollections) {
 }
 
 function searchCollections(searchTerm) {
+  console.log("searchCollections called");
   displayCollections(
     window.allCollections
       .filter((x) => x.name.toLowerCase().includes(searchTerm.toLowerCase()))
@@ -1469,6 +1566,7 @@ function searchCollections(searchTerm) {
 }
 
 async function loadCollections(limit, featuredCollections = []) {
+  console.log("loadCollections called");
   try {
     window.allCollections = await getCollections();
 
@@ -1485,6 +1583,7 @@ async function loadCollections(limit, featuredCollections = []) {
 }
 
 async function loadLatestOrders(limit = 8, nostrLimit = 25) {
+  console.log("loadLatestOrders called");
   try {
     const orders = getLatestOrders(limit, nostrLimit);
 
@@ -1527,6 +1626,7 @@ async function loadLatestOrders(limit = 8, nostrLimit = 25) {
 }
 
 async function homePage() {
+  console.log("homePage called");
   loadCollections(12, [
     {
       name: "<10",
@@ -1541,16 +1641,19 @@ async function homePage() {
 }
 
 async function collectionsPage() {
+  console.log("collectionsPage called");
   await modulesInitializedPromise;
   loadCollections();
 }
 
 async function listingsPage() {
+  console.log("listingsPage called");
   await modulesInitializedPromise;
   loadLatestOrders(100, 200);
 }
 
 function closeDialogsOnClickOutside() {
+  console.log("closeDialogsOnClickOutside called");
   document.addEventListener("click", function (event) {
     const dialogs = document.querySelectorAll("dialog");
     dialogs.forEach((dialog) => {
